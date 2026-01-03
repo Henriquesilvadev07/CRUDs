@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Produtos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>CRUD de Produtos</h1>
+
+    <div class="card">
+        <h2>Cadastrar / Atualizar Produto</h2>
+
+        <input type="number" id="id" placeholder="ID (apenas para atualizar)">
+        <input type="text" id="nome" placeholder="Nome do produto">
+        <input type="text" id="tipo" placeholder="Tipo">
+        <input type="number" step="0.01" id="preco" placeholder="Preço">
+
+        <button onclick="salvarProduto()">Salvar</button>
+        <button onclick="atualizarProduto()">Atualizar</button>
+
+        <p class="mensagem" id="mensagem"></p>
+    </div>
+
+    <div class="card">
+        <h2>Buscar Produto</h2>
+        <input type="text" id="buscarNome" placeholder="Nome do produto">
+        <button onclick="buscarProduto()">Buscar</button>
+
+        <pre id="resultado"></pre>
+    </div>
+
+    <div class="card">
+        <h2>Deletar Produto</h2>
+        <input type="text" id="deletarNome" placeholder="Nome do produto">
+        <button class="danger" onclick="deletarProduto()">Deletar</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
