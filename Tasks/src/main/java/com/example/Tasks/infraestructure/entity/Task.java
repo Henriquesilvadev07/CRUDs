@@ -1,14 +1,10 @@
 package com.example.Tasks.infraestructure.entity;
-
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
-
 
 @Data
 @AllArgsConstructor
@@ -25,6 +21,5 @@ public class Task {
     private String descricao;
     private String status;
     private LocalDateTime dataCriacao;
-
 
 }

@@ -168,21 +168,26 @@
     }
 
     function criarTask() {
-      fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          titulo: document.getElementById("titulo").value,
-          descricao: document.getElementById("descricao").value,
-          status: document.getElementById("status").value
-        })
-      })
-      .then(res => {
-        if (!res.ok) throw new Error();
-        msgCriar.innerText = "✅ Task criada com sucesso!";
-      })
-      .catch(() => msgCriar.innerText = "❌ Erro ao criar task");
-    }
+  fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      titulo: document.getElementById("titulo").value,
+      descricao: document.getElementById("descricao").value,
+      status: document.getElementById("status").value
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error();
+    return res.json(); // 👈 AQUI está o segredo
+  })
+  .then(task => {
+    msgCriar.innerText = `✅ Task criada com sucesso (ID: ${task.id})`;
+  })
+  .catch(() => {
+    msgCriar.innerText = "❌ Erro ao criar task";
+  });
+}
 
     function buscarTask() {
       fetch(`${API}/${buscarId.value}`)
