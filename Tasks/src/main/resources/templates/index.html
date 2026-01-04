@@ -81,6 +81,10 @@
           padding: 10px 0;
         }
 
+        small {
+          color: #94a3b8;
+        }
+
         @media (min-width: 768px) {
           .grid {
             display: grid;
@@ -158,23 +162,27 @@
 <script>
     const API = "http://localhost:8080/tasks";
 
-    function criarTask() {
-  fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      titulo: document.getElementById("titulo").value,
-      descricao: document.getElementById("descricao").value,
-      status: document.getElementById("status").value
-    })
-  })
-  .then(res => {
-    if (!res.ok) throw new Error();
-    msgCriar.innerText = "✅ Task criada com sucesso!";
-  })
-  .catch(() => msgCriar.innerText = "❌ Erro ao criar task");
-}
+    function formatarData(dataIso) {
+      if (!dataIso) return "—";
+      return new Date(dataIso).toLocaleString("pt-BR");
+    }
 
+    function criarTask() {
+      fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo: document.getElementById("titulo").value,
+          descricao: document.getElementById("descricao").value,
+          status: document.getElementById("status").value
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error();
+        msgCriar.innerText = "✅ Task criada com sucesso!";
+      })
+      .catch(() => msgCriar.innerText = "❌ Erro ao criar task");
+    }
 
     function buscarTask() {
       fetch(`${API}/${buscarId.value}`)
@@ -184,7 +192,8 @@
             <div class="task">
               <strong>${t.titulo}</strong><br>
               ${t.descricao}<br>
-              Status: ${t.status}
+              Status: ${t.status}<br>
+              <small>Criada em: ${formatarData(t.dataCriacao)}</small>
             </div>`;
         })
         .catch(() => resultadoBusca.innerText = "❌ Task não encontrada");
@@ -200,7 +209,8 @@
               <div class="task">
                 <strong>#${t.id} - ${t.titulo}</strong><br>
                 ${t.descricao}<br>
-                Status: ${t.status}
+                Status: ${t.status}<br>
+                <small>Criada em: ${formatarData(t.dataCriacao)}</small>
               </div>`;
           });
         });
