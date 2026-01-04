@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Task Manager</title>
+
+    <style>
+        * {
+          box-sizing: border-box;
+          font-family: Arial, sans-serif;
+        }
+
+        body {
+          background: #0f172a;
+          color: #e5e7eb;
+          margin: 0;
+          padding: 20px;
+        }
+
+        h1 {
+          text-align: center;
+          color: #38bdf8;
+        }
+
+        .container {
+          max-width: 900px;
+          margin: auto;
+          display: grid;
+          gap: 20px;
+        }
+
+        .card {
+          background: #020617;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 0 15px rgba(56,189,248,0.15);
+        }
+
+        input, select, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 8px;
+          border-radius: 6px;
+          border: none;
+          outline: none;
+        }
+
+        input, select {
+          background: #020617;
+          color: #e5e7eb;
+          border: 1px solid #1e293b;
+        }
+
+        button {
+          background: #2563eb;
+          color: white;
+          cursor: pointer;
+          font-weight: bold;
+        }
+
+        button:hover {
+          background: #1e40af;
+        }
+
+        .danger {
+          background: #dc2626;
+        }
+
+        .danger:hover {
+          background: #991b1b;
+        }
+
+        .mensagem {
+          margin-top: 10px;
+          font-weight: bold;
+        }
+
+        .task {
+          border-bottom: 1px solid #1e293b;
+          padding: 10px 0;
+        }
+
+        @media (min-width: 768px) {
+          .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Gerenciador de Tasks</h1>
+
+<div class="container">
+
+    <!-- CRIAR -->
+    <div class="card">
+        <h3>Criar Task</h3>
+        <input id="titulo" placeholder="Título" />
+        <input id="descricao" placeholder="Descrição" />
+        <select id="status">
+            <option value="PENDENTE">PENDENTE</option>
+            <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
+            <option value="CONCLUIDA">CONCLUÍDA</option>
+        </select>
+        <button onclick="criarTask()">Salvar</button>
+        <div class="mensagem" id="msgCriar"></div>
+    </div>
+
+    <div class="grid">
+
+        <!-- BUSCAR -->
+        <div class="card">
+            <h3>Buscar Task por ID</h3>
+            <input id="buscarId" placeholder="ID da task" />
+            <button onclick="buscarTask()">Buscar</button>
+            <div id="resultadoBusca"></div>
+        </div>
+
+        <!-- ATUALIZAR -->
+        <div class="card">
+            <h3>Atualizar Task</h3>
+            <input id="updId" placeholder="ID" />
+            <input id="updTitulo" placeholder="Novo título" />
+            <input id="updDescricao" placeholder="Nova descrição" />
+            <select id="updStatus">
+                <option value="">Manter</option>
+                <option value="PENDENTE">PENDENTE</option>
+                <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
+                <option value="CONCLUIDA">CONCLUÍDA</option>
+            </select>
+            <button onclick="atualizarTask()">Atualizar</button>
+            <div class="mensagem" id="msgUpdate"></div>
+        </div>
+
+    </div>
+
+    <!-- LISTAR -->
+    <div class="card">
+        <h3>Listar Todas as Tasks</h3>
+        <button onclick="listarTasks()">Listar</button>
+        <div id="listaTasks"></div>
+    </div>
+
+    <!-- DELETAR -->
+    <div class="card">
+        <h3>Deletar Task</h3>
+        <input id="delId" placeholder="ID da task" />
+        <button class="danger" onclick="deletarTask()">Deletar</button>
+        <div class="mensagem" id="msgDelete"></div>
+    </div>
+
+</div>
+
+<script>
+    const API = "http://localhost:8080/tasks";
+
+    function criarTask() {
+  fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      titulo: document.getElementById("titulo").value,
+      descricao: document.getElementById("descricao").value,
+      status: document.getElementById("status").value
+    })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error();
+    msgCriar.innerText = "✅ Task criada com sucesso!";
+  })
+  .catch(() => msgCriar.innerText = "❌ Erro ao criar task");
+}
+
+
+    function buscarTask() {
+      fetch(`${API}/${buscarId.value}`)
+        .then(res => res.json())
+        .then(t => {
+          resultadoBusca.innerHTML = `
+            <div class="task">
+              <strong>${t.titulo}</strong><br>
+              ${t.descricao}<br>
+              Status: ${t.status}
+            </div>`;
+        })
+        .catch(() => resultadoBusca.innerText = "❌ Task não encontrada");
+    }
+
+    function listarTasks() {
+      fetch(API)
+        .then(res => res.json())
+        .then(lista => {
+          listaTasks.innerHTML = "";
+          lista.forEach(t => {
+            listaTasks.innerHTML += `
+              <div class="task">
+                <strong>#${t.id} - ${t.titulo}</strong><br>
+                ${t.descricao}<br>
+                Status: ${t.status}
+              </div>`;
+          });
+        });
+    }
+
+    function atualizarTask() {
+      fetch(`${API}?id=${updId.value}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo: updTitulo.value || null,
+          descricao: updDescricao.value || null,
+          status: updStatus.value || null
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error();
+        msgUpdate.innerText = "✅ Task atualizada!";
+      })
+      .catch(() => msgUpdate.innerText = "❌ Erro ao atualizar");
+    }
+
+    function deletarTask() {
+      fetch(`${API}?id=${delId.value}`, {
+        method: "DELETE"
+      })
+      .then(res => {
+        if (!res.ok) throw new Error();
+        msgDelete.innerText = "🗑️ Task deletada com sucesso!";
+      })
+      .catch(() => msgDelete.innerText = "❌ Erro ao deletar task");
+    }
+</script>
+
+</body>
+</html>
