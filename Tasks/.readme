@@ -1,0 +1,42 @@
+# Gerenciador de Tasks 📝
+
+Este é um projeto de aplicação prática que simula um **gerenciador de chamados/tasks**, desenvolvido em **Java** com **Spring Boot**, com persistência em **H2 Database** e um **front-end responsivo em HTML, CSS e JavaScript**.
+
+O objetivo do projeto é exercitar o desenvolvimento completo de um CRUD (Create, Read, Update, Delete) e aplicar conceitos de back-end e front-end em conjunto.
+
+---
+
+## Tecnologias Utilizadas 🚀
+
+- **Back-end:**
+  - Java 17
+  - Spring Boot 3
+  - Spring Data JPA
+  - H2 Database (banco em memória)
+  - Lombok
+  - REST API
+
+- **Front-end:**
+  - HTML5, CSS3 e JavaScript
+  - Responsividade com Grid e Flexbox
+  - Interação com API via `fetch`
+
+---
+
+## Funcionalidades 🔹
+
+- **Criar Tasks:** Adiciona uma nova task com título, descrição e status.
+- **Listar Tasks:** Visualiza todas as tasks cadastradas, mostrando ID, título, descrição, status e data de criação.
+- **Buscar Task:** Busca uma task pelo **ID** para facilitar consultas rápidas.
+- **Atualizar Task:** Altera título, descrição ou status de uma task existente.
+- **Deletar Task:** Remove uma task pelo ID.
+- **Notificações:** Mensagens no front-end indicam sucesso ou erro nas operações.
+- **Data de criação:** Cada task exibe a data/hora de criação, útil para histórico.
+
+---
+
+## Como Rodar 🖥️
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/Henriquesilvadev07/CRUDs.git
