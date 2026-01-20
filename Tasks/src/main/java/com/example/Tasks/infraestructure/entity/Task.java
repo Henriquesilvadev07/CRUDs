@@ -21,5 +21,4 @@ public class Task {
     private String descricao;
     private String status;
     private LocalDateTime dataCriacao;
-
 }
